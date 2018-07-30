@@ -1,4 +1,3 @@
-# 导入包
 import numpy as np
 import struct
 import decimal
@@ -9,15 +8,18 @@ from sklearn.externals import joblib
 
 __author__ = 'Zhao Chi'
 
-# 词汇表
+# vocabulary
 voc = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
-# 多线程
+# flag
 flag = 0
 
 
 def verifydata_deal(test_data_fileName):
-    '''对验证数据进行处理'''
-    # 加载测试数据
+    '''
+    Preprocessing verify_data
+    :param test_data_fileName: verifydata_deal's path
+    :return: Preprocessed verify_data
+    '''
     global verify_data
     f = open(test_data_fileName, 'rb')
     verify_data_raw = struct.unpack('f' * 102500, f.read(4 * 102500))
@@ -35,9 +37,12 @@ def run(start, end, name):
 
 
 def search(success_data_dir):
-    '''路径
-    success_data_dir
-    中存放了处理好的文件'''
+    '''
+    search data
+    :param success_data_dir: Preprocessed  raw_data
+    :return: raw_indexs, raw_distances
+    '''
+
     global idxs, dists
     global dist, ind, flag
     global Ball_Tree
@@ -51,7 +56,7 @@ def search(success_data_dir):
     # 在此开启多线程模式 读取一个文件占用800M内存
     j = 0
     for i in voc:
-        '''从BallTree中读取数据'''
+        '''load data from BallTree'''
         loadstart = time.time()
         tree_name = success_data_dir + '/data_a' + str(i) + '.pkl'
         Ball_Tree = joblib.load(tree_name)
@@ -109,7 +114,10 @@ def search(success_data_dir):
 
 def outcome_deal(idxs, dists):
     '''
-    结果处理
+    deal outcomes
+    :param idxs: raw_indexs
+    :param dists: raw_distances
+    :return: time
     '''
     # 输出结果
     min_dists = np.amin(dists, axis=1, keepdims=True)
@@ -135,7 +143,7 @@ def outcome_deal(idxs, dists):
 
 def main(test_data_fileName, success_data_dir):
     start = time.time()
-    verifydata_deal(test_data_fileName)  # 处理验证数据
+    verifydata_deal(test_data_fileName)
     idxs, dists = search(success_data_dir)
     loadtime, searchtime = outcome_deal(idxs, dists)
     end = time.time()

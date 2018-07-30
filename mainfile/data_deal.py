@@ -46,6 +46,11 @@ def data_unpack(nx, ny, data_name):
 
 
 def data_deal(success_data_dir):
+    '''
+    data split
+    :param success_data_dir: data_path
+    :return:
+    '''
     for i in voc:
         data_name = success_data_dir + '/data_a' + str(i)
         data = data_unpack(nx, ny, data_name)
